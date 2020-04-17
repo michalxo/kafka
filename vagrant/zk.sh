@@ -42,6 +42,6 @@ sleep 5 # Because zookeeper-server-stop.sh doesn't actually wait
 echo "Starting ZooKeeper"
 if [[  -n $JMX_PORT ]]; then
   export JMX_PORT=$JMX_PORT
-  export KAFKA_JMX_OPTS="-Djava.rmi.server.hostname=zk$ZKID -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false  -Dcom.sun.management.jmxremote.ssl=false "
+  export KAFKA_JMX_OPTS="-Djava.rmi.server.hostname=zk$ZKID -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false  -Dcom.sun.management.jmxremote.ssl=false -Dcom.ibm.jsse2.overrideDefaultTLS=true "
 fi
 bin/zookeeper-server-start.sh config/zookeeper-$ZKID.properties 1>> /tmp/zk.log 2>> /tmp/zk.log &

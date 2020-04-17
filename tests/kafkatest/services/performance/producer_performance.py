@@ -109,7 +109,7 @@ class ProducerPerformanceService(HttpMetricsCollector, PerformanceService):
 
     def pids(self, node):
         try:
-            cmd = "jps | grep -i ProducerPerformance | awk '{print $1}'"
+            cmd = "ps | grep -i ProducerPerformance | grep -v grep | awk '{print $1}'"
             pid_arr = [pid for pid in node.account.ssh_capture(cmd, allow_fail=True, callback=int)]
             return pid_arr
         except (RemoteCommandError, ValueError) as e:

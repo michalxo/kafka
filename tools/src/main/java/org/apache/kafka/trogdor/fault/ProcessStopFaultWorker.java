@@ -62,7 +62,7 @@ public class ProcessStopFaultWorker implements TaskWorker {
     }
 
     private void sendSignals(Platform platform, String signalName) throws Exception {
-        String jcmdOutput = platform.runCommand(new String[] {"jcmd"});
+        String jcmdOutput = platform.runCommand(new String[] {"ps |grep java | grep -v grep | awk '{print $1 OFS $(NF-1) OFS $NF}'"});
         String[] lines = jcmdOutput.split("\n");
         List<Integer> pids = new ArrayList<>();
         for (String line : lines) {

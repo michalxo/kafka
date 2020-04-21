@@ -129,6 +129,7 @@ class ZookeeperService(KafkaPathResolverMixin, Service):
         return len(self.pids(node)) > 0
 
     def stop_node(self, node):
+        time.sleep(10)
         idx = self.idx(node)
         self.logger.info("Stopping %s node %d on %s" % (type(self).__name__, idx, node.account.hostname))
         node.account.kill_java_processes(self.java_class_name(), allow_fail=False)

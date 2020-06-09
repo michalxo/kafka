@@ -94,7 +94,11 @@ class ProducerPerformanceService(HttpMetricsCollector, PerformanceService):
             cmd += "export CLASSPATH; "
 
         cmd += " export KAFKA_LOG4J_OPTS=\"-Dlog4j.configuration=file:%s\"; " % ProducerPerformanceService.LOG4J_CONFIG
-        cmd += "KAFKA_OPTS=%(kafka_opts)s KAFKA_HEAP_OPTS=\"-XX:+HeapDumpOnOutOfMemoryError\" %(kafka_run_class)s org.apache.kafka.tools.ProducerPerformance " \
+        # JDK 8, 9 needs this patch, as JVM has problem with allocation container memory limits and uses hosts limits -> OOM killer
+        # -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
+        # Since JDK 10+, these options are added by default https://bugs.openjdk.java.net/browse/JDK-8146115
+        # Another solution is to use `-Xmx2g` but it's not scalable if ducker sets greater memory for docker container (current default: 2000m)
+        cmd += "KAFKA_OPTS=%(kafka_opts)s KAFKA_HEAP_OPTS=\"-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:+HeapDumpOnOutOfMemoryError\" %(kafka_run_class)s org.apache.kafka.tools.ProducerPerformance " \
               "--topic %(topic)s --num-records %(num_records)d --record-size %(record_size)d --throughput %(throughput)d --producer-props bootstrap.servers=%(bootstrap_servers)s client.id=%(client_id)s %(metrics_props)s" % args
 
         self.security_config.setup_node(node)

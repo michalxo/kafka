@@ -511,7 +511,7 @@ class StreamsUpgradeTest(Test):
                     self.upgraded_processors.append(processor)
 
                     # checking for the dev version which should be the only SNAPSHOT
-                    log_monitor.wait_until("Kafka version.*" + self.base_version_number + ".*SNAPSHOT",
+                    log_monitor.wait_until("Kafka version.*" + self.base_version_number + ".*redhat.*",
                                            timeout_sec=60,
                                            err_msg="Could not detect Kafka Streams version " + str(DEV_VERSION) + " in " + str(node.account))
                     log_monitor.offset = 5
